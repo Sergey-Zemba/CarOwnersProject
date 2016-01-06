@@ -42,6 +42,17 @@
             @Html.DisplayFor(model => model.DrivingExperience)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Cars)
+        </dt>
+
+        @foreach (var car in Model.Cars)
+        {
+            <dd>
+                @car
+            </dd>
+        }
+
     </dl>
 </div>
 <p>

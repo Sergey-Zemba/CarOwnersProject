@@ -28,6 +28,7 @@ namespace Task2_CarOwners.Models
         [Display(Name = "Driving experience")]
         public int? DrivingExperience { get; set; }
 
+        [Display(Name = "Cars")]
         public virtual ICollection<Car> Cars { get; set; }
 
         public Owner()

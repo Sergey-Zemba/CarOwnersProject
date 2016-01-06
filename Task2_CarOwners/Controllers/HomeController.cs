@@ -109,6 +109,37 @@ namespace Task2_CarOwners.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: Home/AddCar/5
+        public ActionResult AddCar(int id)
+        {
+            Owner owner = db.GetItem(id);
+            if (owner == null)
+            {
+                return HttpNotFound();
+            }
+            IRepository<Car> carsDb = new SqlCarRepository();
+            IEnumerable<Car> availableCars = carsDb.GetList().Except(owner.Cars).OrderBy(c => c.CarBrand).ThenBy(c => c.CarModel).ThenBy(c => c.Number);
+            SelectList cars = new SelectList(availableCars);
+            ViewBag.Cars = cars;
+            return View(owner);
+        }
+
+        // POST: Home/AddCar/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        public ActionResult AddCar([Bind(Include = "Id,FirstName,LastName,YearOfBirth,DrivingExperience")] Owner owner, Car car)
+        {
+            if (ModelState.IsValid)
+            {
+                owner.Cars.Add(car);
+                db.Update(owner);
+                db.Save();
+                return RedirectToAction("Index");
+            }
+            return View(owner);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

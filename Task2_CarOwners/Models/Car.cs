@@ -39,5 +39,10 @@ namespace Task2_CarOwners.Models
             Owners = new List<Owner>();
         }
 
+        public override string ToString()
+        {
+            string str = CarBrand + " " + CarModel + ", " + Number;
+            return str;
+        }
     }
 }
