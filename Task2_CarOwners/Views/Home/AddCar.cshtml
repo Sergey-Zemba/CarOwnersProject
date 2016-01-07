@@ -8,7 +8,8 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    @Html.DropDownList("cars", ViewBag.Cars as SelectList)
+    @Html.DropDownList("cars", (List<SelectListItem>)ViewData["cars"])
+    @Html.Hidden("a", 3)
     <div class="col-md-offset-2 col-md-10">
         <input type="submit" value="Add" class="btn btn-default" />
     </div>

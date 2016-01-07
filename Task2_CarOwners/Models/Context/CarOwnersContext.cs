@@ -13,6 +13,12 @@ namespace Task2_CarOwners.Models.Context
         public DbSet<Car> Cars { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<Owner>()
+            //    .HasMany(o => o.Cars)
+            //    .WithMany(c => c.Owners)
+            //    .Map(t => t.MapLeftKey("OwnerId")
+            //        .MapRightKey("CarId")
+            //        .ToTable("OwnerCars"));
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
             base.OnModelCreating(modelBuilder);
         }

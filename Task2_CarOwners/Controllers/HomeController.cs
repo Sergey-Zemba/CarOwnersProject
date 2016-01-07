@@ -119,8 +119,14 @@ namespace Task2_CarOwners.Controllers
             }
             IRepository<Car> carsDb = new SqlCarRepository();
             IEnumerable<Car> availableCars = carsDb.GetList().Except(owner.Cars).OrderBy(c => c.CarBrand).ThenBy(c => c.CarModel).ThenBy(c => c.Number);
-            SelectList cars = new SelectList(availableCars);
-            ViewBag.Cars = cars;
+            List<SelectListItem> cars = new List<SelectListItem>();
+            foreach (var car in availableCars)
+            {
+                cars.Add(new SelectListItem { Value = car.Id.ToString(), Text = car.ToString() });
+            }
+
+            //SelectList cars = new SelectList(availableCars);
+            ViewData["cars"] = cars;
             return View(owner);
         }
 
@@ -128,15 +134,20 @@ namespace Task2_CarOwners.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult AddCar([Bind(Include = "Id,FirstName,LastName,YearOfBirth,DrivingExperience")] Owner owner, Car car)
+        public ActionResult AddCar(int Id, int a)
         {
-            if (ModelState.IsValid)
-            {
-                owner.Cars.Add(car);
-                db.Update(owner);
-                db.Save();
-                return RedirectToAction("Index");
-            }
+            //if (ModelState.IsValid)
+            //{
+            Owner owner = db.GetItem(Id);
+            IRepository<Car> carsDb = new SqlCarRepository();
+            Car car = carsDb.GetItem(a);
+            owner.Cars.Add(car);
+            carsDb.Update(car);
+            carsDb.Save();
+            db.Update(owner);
+            db.Save();
+            return RedirectToAction("Index");
+            //}
             return View(owner);
         }
 
