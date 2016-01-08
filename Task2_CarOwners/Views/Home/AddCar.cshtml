@@ -2,15 +2,20 @@
 @{
     ViewBag.Title = "AddCar";
 }
-
-<h2>Add Car for @Model.FirstName @Model.LastName</h2>
-@using (Html.BeginForm())
+@if (((List<SelectListItem>) ViewData["cars"]).Count == 0)
 {
-    @Html.AntiForgeryToken()
-    @Html.DropDownList("cars", (List<SelectListItem>)ViewData["cars"])
-    @Html.Hidden("carId", 1)
-    <div class="col-md-offset-2 col-md-10">
-        <input type="submit" value="Add" class="btn btn-default" />
-    </div>
+    <h2>There are no available cars for @Model.FirstName @Model.LastName</h2>
 }
-
+else
+{
+    <h2>Add Car for @Model.FirstName @Model.LastName</h2>
+    using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.DropDownList("carId", (List<SelectListItem>)ViewData["cars"])
+        <input type="submit" value="Add" class="btn btn-default" />
+    }
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

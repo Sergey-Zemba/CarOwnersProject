@@ -19,7 +19,6 @@ namespace Task2_CarOwners.Models.Context
                 .Map(t => t.MapLeftKey("OwnerId")
                     .MapRightKey("CarId")
                     .ToTable("OwnerCars"));
-            modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -1,0 +1,23 @@
+﻿@model Task2_CarOwners.Models.Owner
+@{
+    ViewBag.Title = "DeleteCar";
+}
+
+@if (((List<SelectListItem>)ViewData["cars"]).Count == 0)
+{
+    <h2> @Model.FirstName @Model.LastName doesn't have any cars</h2>
+}
+else
+{
+    <h2>Choose one from @Model.FirstName @Model.LastName car to delete</h2>
+    using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.DropDownList("carId", (List<SelectListItem>)ViewData["cars"])
+        <input type="submit" value="Delete" class="btn btn-default" />
+    }
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+

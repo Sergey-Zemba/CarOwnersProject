@@ -17,9 +17,9 @@ namespace Task2_CarOwners.Controllers
     {
         private IUnitOfWork unitOfWork;
 
-        public HomeController()
+        public HomeController(IUnitOfWork uow)
         {
-            unitOfWork = new SqlUnitOfWork();
+            unitOfWork = uow;
         }
 
         // GET: Home
@@ -124,15 +124,11 @@ namespace Task2_CarOwners.Controllers
             {
                 cars.Add(new SelectListItem { Value = car.Id.ToString(), Text = car.ToString() });
             }
-
-            //SelectList cars = new SelectList(availableCars);
             ViewData["cars"] = cars;
             return View(owner);
         }
 
         // POST: Home/AddCar/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public ActionResult AddCar(int Id, int carId)
         {
@@ -141,6 +137,41 @@ namespace Task2_CarOwners.Controllers
             if (ModelState.IsValid)
             {
                 owner.Cars.Add(car);
+                unitOfWork.Cars.Update(car);
+                unitOfWork.Owners.Update(owner);
+                unitOfWork.Save();
+                return RedirectToAction("Index");
+            }
+            return View(owner);
+        }
+
+        // GET: Home/DeleteCar/5
+        public ActionResult DeleteCar(int id)
+        {
+            Owner owner = unitOfWork.Owners.GetItem(id);
+            if (owner == null)
+            {
+                return HttpNotFound();
+            }
+            IEnumerable<Car> garage = owner.Cars;
+            List<SelectListItem> cars = new List<SelectListItem>();
+            foreach (var car in garage)
+            {
+                cars.Add(new SelectListItem { Value = car.Id.ToString(), Text = car.ToString() });
+            }
+            ViewData["cars"] = cars;
+            return View(owner);
+        }
+
+        // POST: Home/DeleteCar/5
+        [HttpPost]
+        public ActionResult DeleteCar(int Id, int carId)
+        {
+            Owner owner = unitOfWork.Owners.GetItem(Id);
+            Car car = unitOfWork.Cars.GetItem(carId);
+            if (ModelState.IsValid)
+            {
+                owner.Cars.Remove(car);
                 unitOfWork.Cars.Update(car);
                 unitOfWork.Owners.Update(owner);
                 unitOfWork.Save();
