@@ -9,28 +9,29 @@ using System.Web.Mvc;
 using Task2_CarOwners.Models;
 using Task2_CarOwners.Models.Context;
 using Task2_CarOwners.Models.Repository;
+using Task2_CarOwners.Models.Repository.SqlRepository;
 
 namespace Task2_CarOwners.Controllers
 {
     public class HomeController : Controller
     {
-        private IRepository<Owner> db;
+        private IUnitOfWork unitOfWork;
 
         public HomeController()
         {
-            db = new SqlOwnerRepository();
+            unitOfWork = new SqlUnitOfWork();
         }
 
         // GET: Home
         public ActionResult Index()
         {
-            return View(db.GetList());
+            return View(unitOfWork.Owners.GetList());
         }
 
         // GET: Home/Details/5
         public ActionResult Details(int id)
         {
-            Owner owner = db.GetItem(id);
+            Owner owner = unitOfWork.Owners.GetItem(id);
             if (owner == null)
             {
                 return HttpNotFound();
@@ -53,8 +54,8 @@ namespace Task2_CarOwners.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Create(owner);
-                db.Save();
+                unitOfWork.Owners.Create(owner);
+                unitOfWork.Save();
                 return RedirectToAction("Index");
             }
 
@@ -64,7 +65,7 @@ namespace Task2_CarOwners.Controllers
         // GET: Home/Edit/5
         public ActionResult Edit(int id)
         {
-            Owner owner = db.GetItem(id);
+            Owner owner = unitOfWork.Owners.GetItem(id);
             if (owner == null)
             {
                 return HttpNotFound();
@@ -81,8 +82,8 @@ namespace Task2_CarOwners.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Update(owner);
-                db.Save();
+                unitOfWork.Owners.Update(owner);
+                unitOfWork.Save();
                 return RedirectToAction("Index");
             }
             return View(owner);
@@ -91,7 +92,7 @@ namespace Task2_CarOwners.Controllers
         // GET: Home/Delete/5
         public ActionResult Delete(int id)
         {
-            Owner owner = db.GetItem(id);
+            Owner owner = unitOfWork.Owners.GetItem(id);
             if (owner == null)
             {
                 return HttpNotFound();
@@ -104,21 +105,20 @@ namespace Task2_CarOwners.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            db.Delete(id);
-            db.Save();
+            unitOfWork.Owners.Delete(id);
+            unitOfWork.Save();
             return RedirectToAction("Index");
         }
 
         // GET: Home/AddCar/5
         public ActionResult AddCar(int id)
         {
-            Owner owner = db.GetItem(id);
+            Owner owner = unitOfWork.Owners.GetItem(id);
             if (owner == null)
             {
                 return HttpNotFound();
             }
-            IRepository<Car> carsDb = new SqlCarRepository();
-            IEnumerable<Car> availableCars = carsDb.GetList().Except(owner.Cars).OrderBy(c => c.CarBrand).ThenBy(c => c.CarModel).ThenBy(c => c.Number);
+            IEnumerable<Car> availableCars = unitOfWork.Cars.GetList().Except(owner.Cars).OrderBy(c => c.CarBrand).ThenBy(c => c.CarModel).ThenBy(c => c.Number);
             List<SelectListItem> cars = new List<SelectListItem>();
             foreach (var car in availableCars)
             {
@@ -134,20 +134,18 @@ namespace Task2_CarOwners.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult AddCar(int Id, int a)
+        public ActionResult AddCar(int Id, int carId)
         {
-            //if (ModelState.IsValid)
-            //{
-            Owner owner = db.GetItem(Id);
-            IRepository<Car> carsDb = new SqlCarRepository();
-            Car car = carsDb.GetItem(a);
-            owner.Cars.Add(car);
-            carsDb.Update(car);
-            carsDb.Save();
-            db.Update(owner);
-            db.Save();
-            return RedirectToAction("Index");
-            //}
+            Owner owner = unitOfWork.Owners.GetItem(Id);
+            Car car = unitOfWork.Cars.GetItem(carId);
+            if (ModelState.IsValid)
+            {
+                owner.Cars.Add(car);
+                unitOfWork.Cars.Update(car);
+                unitOfWork.Owners.Update(owner);
+                unitOfWork.Save();
+                return RedirectToAction("Index");
+            }
             return View(owner);
         }
 
@@ -155,7 +153,7 @@ namespace Task2_CarOwners.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                unitOfWork.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Web;
 using Task2_CarOwners.Models.Context;
 
-namespace Task2_CarOwners.Models.Repository
+namespace Task2_CarOwners.Models.Repository.SqlRepository
 {
     public class SqlOwnerRepository : IRepository<Owner>
     {
         private CarOwnersContext db;
 
-        public SqlOwnerRepository()
+        public SqlOwnerRepository(CarOwnersContext context)
         {
-            db = new CarOwnersContext();
+            db = context;
         }
         public IEnumerable<Owner> GetList()
         {
@@ -44,29 +42,6 @@ namespace Task2_CarOwners.Models.Repository
             }
         }
 
-        public void Save()
-        {
-            db.SaveChanges();
-        }
 
-        private bool disposed = false;
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    db.Dispose();
-                }
-            }
-            disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
     }
 }

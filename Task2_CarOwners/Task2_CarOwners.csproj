@@ -129,8 +129,10 @@
     <Compile Include="Models\Context\CarOwnersContextInitializer.cs" />
     <Compile Include="Models\Owner.cs" />
     <Compile Include="Models\Repository\IRepository.cs" />
-    <Compile Include="Models\Repository\SqlCarRepository.cs" />
-    <Compile Include="Models\Repository\SqlOwnerRepository.cs" />
+    <Compile Include="Models\Repository\IUnitOfWork.cs" />
+    <Compile Include="Models\Repository\SqlRepository\SqlCarRepository.cs" />
+    <Compile Include="Models\Repository\SqlRepository\SqlOwnerRepository.cs" />
+    <Compile Include="Models\Repository\SqlRepository\SqlUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

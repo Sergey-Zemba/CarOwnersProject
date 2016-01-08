@@ -1,5 +1,4 @@
-﻿@using Task2_CarOwners.Models
-@model Task2_CarOwners.Models.Owner
+﻿@model Task2_CarOwners.Models.Owner
 @{
     ViewBag.Title = "AddCar";
 }
@@ -9,7 +8,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.DropDownList("cars", (List<SelectListItem>)ViewData["cars"])
-    @Html.Hidden("a", 3)
+    @Html.Hidden("carId", 1)
     <div class="col-md-offset-2 col-md-10">
         <input type="submit" value="Add" class="btn btn-default" />
     </div>

@@ -2,7 +2,7 @@
 
 namespace Task2_CarOwners.Models.Context
 {
-    public class CarOwnersContextInitializer : DropCreateDatabaseAlways<CarOwnersContext>
+    public class CarOwnersContextInitializer : CreateDatabaseIfNotExists<CarOwnersContext>
     {
     }
 }

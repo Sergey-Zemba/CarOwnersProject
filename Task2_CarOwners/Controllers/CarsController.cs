@@ -9,28 +9,29 @@ using System.Web.Mvc;
 using Task2_CarOwners.Models;
 using Task2_CarOwners.Models.Context;
 using Task2_CarOwners.Models.Repository;
+using Task2_CarOwners.Models.Repository.SqlRepository;
 
 namespace Task2_CarOwners.Controllers
 {
     public class CarsController : Controller
     {
-        private IRepository<Car> db;
+        private IUnitOfWork unitOfWork;
 
         public CarsController()
         {
-            db = new SqlCarRepository();
+            unitOfWork = new SqlUnitOfWork();
         }
 
         // GET: Cars
         public ActionResult Index()
         {
-            return View(db.GetList());
+            return View(unitOfWork.Cars.GetList());
         }
 
         // GET: Cars/Details/5
         public ActionResult Details(int id)
         {
-            Car car = db.GetItem(id);
+            Car car = unitOfWork.Cars.GetItem(id);
             if (car == null)
             {
                 return HttpNotFound();
@@ -53,8 +54,8 @@ namespace Task2_CarOwners.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Create(car);
-                db.Save();
+                unitOfWork.Cars.Create(car);
+                unitOfWork.Save();
                 return RedirectToAction("Index");
             }
 
@@ -64,7 +65,7 @@ namespace Task2_CarOwners.Controllers
         // GET: Cars/Edit/5
         public ActionResult Edit(int id)
         {
-            Car car = db.GetItem(id);
+            Car car = unitOfWork.Cars.GetItem(id);
             if (car == null)
             {
                 return HttpNotFound();
@@ -81,8 +82,8 @@ namespace Task2_CarOwners.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Update(car);
-                db.Save();
+                unitOfWork.Cars.Update(car);
+                unitOfWork.Save();
                 return RedirectToAction("Index");
             }
             return View(car);
@@ -91,7 +92,7 @@ namespace Task2_CarOwners.Controllers
         // GET: Cars/Delete/5
         public ActionResult Delete(int id)
         {
-            Car car = db.GetItem(id);
+            Car car = unitOfWork.Cars.GetItem(id);
             if (car == null)
             {
                 return HttpNotFound();
@@ -104,8 +105,8 @@ namespace Task2_CarOwners.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            db.Delete(id);
-            db.Save();
+            unitOfWork.Cars.Delete(id);
+            unitOfWork.Save();
             return RedirectToAction("Index");
         }
 
@@ -113,7 +114,7 @@ namespace Task2_CarOwners.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                unitOfWork.Dispose();
             }
             base.Dispose(disposing);
         }
