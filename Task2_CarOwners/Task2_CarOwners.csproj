@@ -146,9 +146,9 @@
     <Compile Include="Migrations\201601080016096_InitialCreate.Designer.cs">
       <DependentUpon>201601080016096_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201601082115019_MigrateDB.cs" />
-    <Compile Include="Migrations\201601082115019_MigrateDB.Designer.cs">
-      <DependentUpon>201601082115019_MigrateDB.cs</DependentUpon>
+    <Compile Include="Migrations\201601091404057_MigrateDB.cs" />
+    <Compile Include="Migrations\201601091404057_MigrateDB.Designer.cs">
+      <DependentUpon>201601091404057_MigrateDB.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Car.cs" />
@@ -223,8 +223,8 @@
     <EmbeddedResource Include="Migrations\201601080016096_InitialCreate.resx">
       <DependentUpon>201601080016096_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201601082115019_MigrateDB.resx">
-      <DependentUpon>201601082115019_MigrateDB.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201601091404057_MigrateDB.resx">
+      <DependentUpon>201601091404057_MigrateDB.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

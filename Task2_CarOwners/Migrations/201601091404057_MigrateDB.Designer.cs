@@ -13,7 +13,7 @@ namespace Task2_CarOwners.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201601082115019_MigrateDB"; }
+            get { return "201601091404057_MigrateDB"; }
         }
         
         string IMigrationMetadata.Source

@@ -17,9 +17,9 @@ namespace Task2_CarOwners.Controllers
     {
         private IUnitOfWork unitOfWork;
 
-        public CarsController()
+        public CarsController(IUnitOfWork uow)
         {
-            unitOfWork = new SqlUnitOfWork();
+            unitOfWork = uow;
         }
 
         // GET: Cars
@@ -42,6 +42,7 @@ namespace Task2_CarOwners.Controllers
         // GET: Cars/Create
         public ActionResult Create()
         {
+            ViewBag.Message = "";
             return View();
         }
 
@@ -52,11 +53,18 @@ namespace Task2_CarOwners.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,CarBrand,CarModel,CarType,Price,YearOfManufacture,Number")] Car car)
         {
+            string number = car.Number;
+            Car findingCar = unitOfWork.Cars.GetList().FirstOrDefault(c => c.Number == number);
             if (ModelState.IsValid)
             {
-                unitOfWork.Cars.Create(car);
-                unitOfWork.Save();
-                return RedirectToAction("Index");
+                if (findingCar == null)
+                {
+                    unitOfWork.Cars.Create(car);
+                    unitOfWork.Save();
+                    return RedirectToAction("Index");
+                }
+                ViewBag.Message = "The car with the same number already exists";
+                return View(car);
             }
 
             return View(car);

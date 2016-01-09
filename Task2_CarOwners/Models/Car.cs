@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace Task2_CarOwners.Models
 {
@@ -12,9 +13,11 @@ namespace Task2_CarOwners.Models
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "The brand is required")]
         [Display(Name = "Brand")]
         public string CarBrand { get; set; }
 
+        [Required(ErrorMessage = "The model is required")]
         [Display(Name = "Model")]
         public string CarModel { get; set; }
 
@@ -30,7 +33,8 @@ namespace Task2_CarOwners.Models
 
         [Required(ErrorMessage = "The number is required")]
         [Display(Name = "Number")]
-        [StringLength(12, MinimumLength = 5, ErrorMessage = "The number length have to be from 5 to 12 characters")]
+        [StringLength(8, MinimumLength = 8, ErrorMessage = "The number length have to be 6 characters")]
+        [RegularExpression(@"[A-z]{2}\d{4}[A-z]{2}", ErrorMessage = "Incorrect number format")]
         public string Number { get; set; }
         public virtual ICollection<Owner> Owners { get; set; }
 
